@@ -154,21 +154,40 @@ const AddPaperScreen = ({ navigation, route }) => {
 
       // Search arXiv
       try {
-        console.log('arXiv search URL:', `https://export.arxiv.org/api/query?search_query=${arxivParam}&start=0&max_results=10&sortBy=relevance&sortOrder=descending`);
-        const arxivResponse = await Promise.race([
-          fetch(
-            `https://export.arxiv.org/api/query?search_query=${arxivParam}&start=0&max_results=10&sortBy=relevance&sortOrder=descending`
-          ),
-          new Promise((_, reject) => 
-            setTimeout(() => reject(new Error('arXiv request timeout')), 10000)
-          )
-        ]);
+        console.log('arXiv search URL:', `https://export.arxiv.org/api/query?search_query=${arxivParam}&start=0&max_results=50&sortBy=relevance&sortOrder=descending`);
+        
+        // Add retry logic for arXiv search
+        let retryCount = 0;
+        const maxRetries = 3;
+        let arxivResponse = null;
+        
+        while (retryCount < maxRetries) {
+          try {
+            arxivResponse = await Promise.race([
+              fetch(
+                `https://export.arxiv.org/api/query?search_query=${arxivParam}&start=0&max_results=50&sortBy=relevance&sortOrder=descending`
+              ),
+              new Promise((_, reject) => 
+                setTimeout(() => reject(new Error('arXiv request timeout')), 15000)
+              )
+            ]);
+            break; // If successful, break the retry loop
+          } catch (retryError) {
+            retryCount++;
+            if (retryCount === maxRetries) {
+              throw retryError; // If all retries failed, throw the error
+            }
+            console.log(`arXiv search attempt ${retryCount} failed, retrying...`);
+            await new Promise(resolve => setTimeout(resolve, 1000 * retryCount)); // Exponential backoff
+          }
+        }
 
-        if (arxivResponse.ok) {
+        if (arxivResponse && arxivResponse.ok) {
           const arxivData = await arxivResponse.text();
           const entries = arxivData.split('<entry>').slice(1);
           console.log('arXiv results count:', entries.length);
-          entries.forEach((entry, index) => {
+          
+          for (const entry of entries) {
             const idMatch = entry.match(/<id>(.*?)<\/id>/);
             const titleMatch = entry.match(/<title>(.*?)<\/title>/);
             const authorsMatch = entry.match(/<author>.*?<name>(.*?)<\/name>.*?<\/author>/g);
@@ -192,10 +211,26 @@ const AddPaperScreen = ({ navigation, route }) => {
               pdfUrl,
               citationCount: 0
             });
-          });
+          }
         }
       } catch (arxivError) {
         console.warn('arXiv search failed:', arxivError);
+        if (arxivError.message === 'arXiv request timeout') {
+          Alert.alert(
+            'Search Timeout',
+            'The arXiv search request took too long to complete. Please try again.'
+          );
+        } else if (arxivError.message.includes('Network request failed')) {
+          Alert.alert(
+            'Network Error',
+            'Failed to connect to arXiv. Please check your internet connection and try again.'
+          );
+        } else {
+          Alert.alert(
+            'Search Error',
+            'Failed to search arXiv. Please try again.'
+          );
+        }
       }
 
       console.log('Total results:', results.length);
@@ -650,7 +685,7 @@ const AddPaperScreen = ({ navigation, route }) => {
             <ActivityIndicator style={styles.searchLoading} color="#4f5ef7" />
           )}
           {searchResults.length > 0 && (
-            <View style={styles.searchResults}>
+            <ScrollView style={styles.searchResults}>
               {searchResults.map((item) => (
                 <TouchableOpacity
                   key={item.id}
@@ -664,7 +699,7 @@ const AddPaperScreen = ({ navigation, route }) => {
                   </Text>
                 </TouchableOpacity>
               ))}
-            </View>
+            </ScrollView>
           )}
         </View>
       )}
@@ -852,12 +887,11 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   searchResults: {
-    maxHeight: 300,
-    marginTop: 8,
     backgroundColor: '#fff',
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#eee',
+    marginTop: 8,
   },
   searchResultItem: {
     padding: 12,

@@ -105,62 +105,43 @@ const AccountScreen = ({ navigation }) => {
                 <Image source={{ uri: profileImage }} style={styles.profileImage} />
               ) : (
                 <View style={styles.profileImagePlaceholder}>
-                  <Ionicons name="person" size={40} color="#666" />
+                  <Ionicons name="person" size={50} color="#666" />
                 </View>
               )}
               {isEditing && (
                 <View style={styles.changePhotoButton}>
-                  <Ionicons name="camera" size={20} color="#fff" />
+                  <Ionicons name="camera" size={24} color="#fff" />
                 </View>
               )}
             </TouchableOpacity>
 
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>Name</Text>
-              {isEditing ? (
-                <TextInput
-                  style={styles.nameInput}
-                  value={editedName}
-                  onChangeText={setEditedName}
-                  placeholder="Enter your name"
-                />
-              ) : (
-                <Text style={styles.value}>{user?.name || 'Not set'}</Text>
-              )}
-            </View>
-            <View style={styles.infoRow}>
-              <Text style={styles.label}>Email</Text>
-              <Text style={styles.value}>{user?.email || 'Not set'}</Text>
+            <View style={styles.infoContainer}>
+              <View style={styles.infoRow}>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="person-outline" size={20} color="#666" style={styles.labelIcon} />
+                  <Text style={styles.label}>Name</Text>
+                </View>
+                {isEditing ? (
+                  <TextInput
+                    style={styles.nameInput}
+                    value={editedName}
+                    onChangeText={setEditedName}
+                    placeholder="Enter your name"
+                  />
+                ) : (
+                  <Text style={styles.value}>{user?.name || 'Not set'}</Text>
+                )}
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.infoRow}>
+                <View style={styles.labelContainer}>
+                  <Ionicons name="mail-outline" size={20} color="#666" style={styles.labelIcon} />
+                  <Text style={styles.label}>Email</Text>
+                </View>
+                <Text style={styles.value}>{user?.email || 'Not set'}</Text>
+              </View>
             </View>
           </View>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Account Settings</Text>
-          <TouchableOpacity style={styles.settingItem}>
-            <Ionicons name="lock-closed-outline" size={24} color="#333" />
-            <Text style={styles.settingText}>Change Password</Text>
-            <Ionicons name="chevron-forward" size={24} color="#999" />
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.settingItem}>
-            <Ionicons name="mail-outline" size={24} color="#333" />
-            <Text style={styles.settingText}>Change Email</Text>
-            <Ionicons name="chevron-forward" size={24} color="#999" />
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Data & Privacy</Text>
-          <TouchableOpacity style={styles.settingItem}>
-            <Ionicons name="download-outline" size={24} color="#333" />
-            <Text style={styles.settingText}>Download My Data</Text>
-            <Ionicons name="chevron-forward" size={24} color="#999" />
-          </TouchableOpacity>
-          <TouchableOpacity style={[styles.settingItem, styles.deleteButton]}>
-            <Ionicons name="trash-outline" size={24} color="#e53935" />
-            <Text style={[styles.settingText, styles.deleteText]}>Delete Account</Text>
-            <Ionicons name="chevron-forward" size={24} color="#999" />
-          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -186,127 +167,132 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   headerTitle: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#222',
     flex: 1,
   },
   editButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#4f5ef722',
+    borderRadius: 8,
   },
   editButtonText: {
     color: '#4f5ef7',
     fontWeight: '600',
+    fontSize: 15,
   },
   saveButton: {
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: '#4f5ef7',
+    borderRadius: 8,
   },
   saveButtonText: {
-    color: '#4f5ef7',
+    color: '#fff',
     fontWeight: '600',
+    fontSize: 15,
   },
   content: {
     flex: 1,
   },
   section: {
     marginTop: 24,
-    paddingHorizontal: 16,
+    paddingHorizontal: 20,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: '#666',
-    marginBottom: 12,
+    color: '#222',
+    marginBottom: 16,
   },
   infoCard: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
+    borderRadius: 16,
+    padding: 24,
     shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
+    shadowOpacity: 0.06,
+    shadowRadius: 12,
+    elevation: 3,
   },
   profileImageContainer: {
     alignItems: 'center',
-    marginBottom: 20,
+    marginBottom: 32,
   },
   profileImage: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
   },
   profileImagePlaceholder: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: '#eee',
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: '#f0f0f0',
     alignItems: 'center',
     justifyContent: 'center',
   },
   changePhotoButton: {
     position: 'absolute',
     bottom: 0,
-    right: 0,
+    right: '50%',
+    marginRight: -60,
     backgroundColor: '#4f5ef7',
-    width: 32,
-    height: 32,
-    borderRadius: 16,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
+    borderWidth: 3,
     borderColor: '#fff',
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  infoContainer: {
+    backgroundColor: '#fafbfc',
+    borderRadius: 12,
+    padding: 16,
   },
   infoRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 12,
+  },
+  labelContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  labelIcon: {
+    marginRight: 8,
   },
   label: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#666',
+    fontWeight: '500',
   },
   value: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#222',
-    fontWeight: '500',
+    fontWeight: '600',
   },
   nameInput: {
-    fontSize: 15,
+    fontSize: 16,
     color: '#222',
-    fontWeight: '500',
+    fontWeight: '600',
     textAlign: 'right',
     borderBottomWidth: 1,
     borderBottomColor: '#4f5ef7',
     paddingVertical: 4,
-    minWidth: 150,
+    minWidth: 180,
   },
-  settingItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 8,
-    shadowColor: '#000',
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    elevation: 2,
-  },
-  settingText: {
-    flex: 1,
-    fontSize: 15,
-    color: '#222',
-    marginLeft: 12,
-  },
-  deleteButton: {
-    marginTop: 8,
-  },
-  deleteText: {
-    color: '#e53935',
+  divider: {
+    height: 1,
+    backgroundColor: '#eee',
+    marginVertical: 4,
   },
 });
 

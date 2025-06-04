@@ -164,35 +164,6 @@ export default function SignupScreen({ navigation }) {
         )}
       </TouchableOpacity>
 
-      {/* Divider */}
-      <View style={styles.dividerContainer}>
-        <View style={styles.divider} />
-        <Text style={styles.or}>or</Text>
-        <View style={styles.divider} />
-      </View>
-
-      {/* Google Signup */}
-      <TouchableOpacity style={styles.oauthButton} onPress={handleGoogleSignUp}>
-        <MaterialCommunityIcons
-          name="google"
-          size={20}
-          color="#EA4335"
-          style={styles.oauthIcon}
-        />
-        <Text style={styles.oauthText}>Sign up with Google</Text>
-      </TouchableOpacity>
-
-      {/* Microsoft Signup */}
-      <TouchableOpacity style={styles.oauthButton} onPress={handleMicrosoftSignUp}>
-        <MaterialCommunityIcons
-          name="microsoft"
-          size={20}
-          color="#0078D4"
-          style={styles.oauthIcon}
-        />
-        <Text style={styles.oauthText}>Sign up with Microsoft</Text>
-      </TouchableOpacity>
-
       {/* Footer */}
       <Text style={styles.footerText}>
         Already have an account?{' '}
@@ -214,7 +185,6 @@ const styles = StyleSheet.create({
     flexGrow: 1,
     backgroundColor: '#F9FAFB',
     alignItems: 'center',
-    justifyContent: 'center',
     paddingVertical: 40,
     paddingHorizontal: 20,
     paddingBottom: 60,
@@ -224,27 +194,27 @@ const styles = StyleSheet.create({
     height: 130,
     resizeMode: 'contain',
     transform: [{ scale: 2 }],
-    marginBottom: 16,
+    marginBottom: 32,
   },
   heading: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: '700',
     color: '#111827',
     textAlign: 'center',
+    marginBottom: 8,
   },
   subheading: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#6B7280',
     textAlign: 'center',
-    marginTop: 4,
-    marginBottom: 16,
+    marginBottom: 32,
   },
   label: {
     alignSelf: 'flex-start',
     fontSize: 14,
     color: '#111827',
-    marginBottom: 4,
-    marginTop: 12,
+    marginBottom: 8,
+    marginTop: 16,
   },
   input: {
     width: '100%',
@@ -270,10 +240,10 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     backgroundColor: '#4F46E5',
-    width: '100%',
     paddingVertical: 14,
     borderRadius: 8,
-    marginTop: 20,
+    marginTop: 32,
+    width: '100%',
     alignItems: 'center',
   },
   signupButtonDisabled: {
@@ -281,63 +251,23 @@ const styles = StyleSheet.create({
   },
   signupText: {
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '700',
-  },
-  dividerContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginVertical: 20,
-    width: '100%',
-  },
-  divider: {
-    flex: 1,
-    height: 1,
-    backgroundColor: '#E5E7EB',
-  },
-  or: {
-    marginHorizontal: 8,
-    fontSize: 14,
-    color: '#9CA3AF',
-  },
-  oauthButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    paddingVertical: 12,
-    paddingHorizontal: 16,
-    width: '100%',
-    marginBottom: 12,
-    backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    position: 'relative',
-  },
-  oauthIcon: {
-    position: 'absolute',
-    left: 16,
-  },
-  oauthText: {
-    fontSize: 14,
-    color: '#111827',
-    fontWeight: '500',
-    textAlign: 'center',
-    flex: 1,
+    fontSize: 16,
+    fontWeight: '600',
   },
   footerText: {
+    marginTop: 32,
     fontSize: 14,
     color: '#6B7280',
-    marginTop: 16,
+    textAlign: 'center',
   },
   loginLink: {
     color: '#4F46E5',
-    fontWeight: '700',
-    fontSize: 14,
+    fontWeight: '600',
   },
   copyright: {
+    marginTop: 16,
     fontSize: 12,
     color: '#9CA3AF',
-    marginTop: 24,
+    textAlign: 'center',
   },
 });

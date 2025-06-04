@@ -220,16 +220,44 @@ const PrivacySettingsScreen = ({ navigation }) => {
           style: "destructive",
           onPress: async () => {
             try {
-              // Get user profile data before deletion
-              const userData = await AsyncStorage.getItem('user');
-              
-              // Delete all app data from AsyncStorage
-              const keys = await AsyncStorage.getAllKeys();
-              await AsyncStorage.multiRemove(keys);
+              // List of all storage keys to delete
+              const storageKeys = [
+                'papers',
+                'my_folders',
+                'favorite_authors',
+                'favorite_journals',
+                'readingHistory',
+                'bookmarks',
+                'annotations',
+                'notes',
+                'citations',
+                'references',
+                'searchHistory',
+                'usageData',
+                'analyticsData',
+                'recommendations',
+                'sharedReadingHistory',
+                'syncQueue',
+                'userPreferences',
+                'appearanceSettings',
+                'notificationSettings',
+                'lastSync',
+                'syncPreferences'
+              ];
 
-              // Restore user profile data
-              if (userData) {
-                await AsyncStorage.setItem('user', userData);
+              // Delete all specified keys
+              await AsyncStorage.multiRemove(storageKeys);
+
+              // Clear all cached files
+              try {
+                const files = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
+                for (const file of files) {
+                  if (file.endsWith('.json') || file.endsWith('.pdf')) {
+                    await FileSystem.deleteAsync(FileSystem.documentDirectory + file, { idempotent: true });
+                  }
+                }
+              } catch (fileError) {
+                console.warn('Could not clear cached files:', fileError);
               }
 
               // Reset privacy settings to defaults
@@ -241,29 +269,11 @@ const PrivacySettingsScreen = ({ navigation }) => {
                 autoSync: true
               });
 
-              // Try to clear cached files, but don't fail if it doesn't work
-              try {
-                const files = await FileSystem.readDirectoryAsync(FileSystem.documentDirectory);
-                for (const file of files) {
-                  if (file.endsWith('.json') || file.endsWith('.pdf')) {
-                    await FileSystem.deleteAsync(FileSystem.documentDirectory + file, { idempotent: true });
-                  }
-                }
-              } catch (fileError) {
-                console.warn('Could not clear cached files:', fileError);
-                // Continue with deletion even if file clearing fails
-              }
-
-              Alert.alert(
-                "Data Deleted",
-                "Your data has been deleted successfully.",
-                [
-                  {
-                    text: "OK",
-                    onPress: () => navigation.navigate('Login')
-                  }
-                ]
-              );
+              // Navigate to Login screen and clear the navigation stack
+              navigation.reset({
+                index: 0,
+                routes: [{ name: 'Login' }],
+              });
             } catch (error) {
               console.error('Error deleting data:', error);
               Alert.alert(
